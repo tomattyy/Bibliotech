@@ -1,1 +1,12 @@
-Dockerfile
+.env
+.env.*
+!.env.example
+coverage
+dist
+*.log
+Dockerfile*
+docker-compose*.yml
+README.md
+.git
+.gitignore
+.github
