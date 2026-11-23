@@ -7,3 +7,6 @@ dist
 Dockerfile*
 docker-compose*.yml
 README.md
+.git
+.gitignore
+.github
