@@ -1,0 +1,44 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: books_db
+      POSTGRES_USER: books
+      POSTGRES_PASSWORD: senha_local_teste
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U books -d books_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build: ./backend
+    image: bibliotech-backend:local
+    ports:
+      - "3001:3001"
+    environment:
+      PORT: 3001
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: books
+      DB_PASSWORD: senha_local_teste
+      DB_NAME: books_db
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:3001/api
+    image: bibliotech-frontend:local
+    ports:
+      - "8080:8080"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:
